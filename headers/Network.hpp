@@ -1,12 +1,14 @@
+#include <iostream>
 #include "Layer.hpp"
 
 using namespace std;
 
 class Network{
     private:
-    vector<Layer> layers;
     public:
+    vector<Layer> layers;
     Network(int l[]);
     void connect(int inputNeurons);
-    vector<double> calculate();
+    void calculate();
+    void input(vector<double> v);
 };

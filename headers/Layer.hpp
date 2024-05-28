@@ -1,4 +1,5 @@
 #include <vector>
+#include <iostream>
 #include "Neuron.hpp"
 
 using namespace std;

@@ -14,6 +14,7 @@ void Layer::connect(int n){
         //also add neurons
         neurons.push_back(ne);
     }
+    // cout << neurons.size() << "\n";
 }
 
 Layer::Layer(int n){
