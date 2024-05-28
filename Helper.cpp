@@ -22,3 +22,7 @@ vector<double> matrixMult(vector<vector<double>> a, vector<double> b){
 
     return v;
 }
+
+double sigmoid(double d){
+    return 1/(1+pow(2.71828, -d));
+}

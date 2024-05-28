@@ -3,7 +3,7 @@
 
 using namespace std;
 
-Network::Network(int l[]){
+Network::Network(int *l){
     for (int i = 0; i < sizeof(l)/sizeof(l[0])+1; i++){
         Layer L(l[i]);
         layers.push_back(L);
@@ -26,17 +26,22 @@ void Network::calculate(){
         }
         vector<double> neuronvalues = matrixMult(layers[i].weights, prevneurons);
         for (int n = 0; n < neuronvalues.size(); n++){
-            layers[i].neurons[n].value = neuronvalues[n];
+            layers[i].neurons[n].value = sigmoid(neuronvalues[n] + layers[i].biases[n]);
         }
     }
 }
 
 void Network::input(vector<double> v){
-    // cout << layers[1].neurons.size();
-    // for (Neuron n: layers[0].neurons){
-    //     cout << n.value << "e" << "\n";
-    // }
     for (int n = 0; n < v.size(); n++){
         layers[0].neurons[n].value = v[n];
     }
+}
+
+double Network::totalError(vector<double> v){
+    double e = 0;
+    for (int i = 0; i < layers[layers.size()-1].neurons.size(); i++){
+        e += layers[layers.size()-1].neurons[i].error(v[i]);
+    }
+
+    return e;
 }
