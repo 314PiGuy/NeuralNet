@@ -35,7 +35,7 @@ Network train(Network net){
                 net.calculate();
                 double error2 = net.totalError({0.5, 0.5});
                 double slope = (error-error2)*10;
-                changes[r][c] = slope;
+                changes[r][c] = slope/10;
             }
         }
         for (int r = 0; r < net.layers[n].weights.size(); r++){
@@ -59,13 +59,15 @@ Network train(Network net){
 
 
 int main(){
-    int l[] = {2, 3, 2};
-    Network net = Network(l);
+    int l[] = {2, 4, 4, 4, 2};
+    Network net = Network(l, 5);
     net.connect(2);
     net.input({1, 1});
     net.calculate();
+
+    cout << net.layers.size() << "\n";
     
-    for (Neuron n: net.layers[2].neurons){
+    for (Neuron n: net.layers[net.layers.size()-1].neurons){
         cout << n.value << "\n";
     }
     cout << net.totalError({0.5, 0.5})<< "\n\n";
@@ -95,7 +97,7 @@ int main(){
 
     net.calculate();
 
-    for (Neuron n: net.layers[2].neurons){
+    for (Neuron n: net.layers[net.layers.size()-1].neurons){
         cout << n.value << "\n";
     }
     cout << net.totalError({0.5, 0.5})<< "\n\n";

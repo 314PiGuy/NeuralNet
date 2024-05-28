@@ -3,8 +3,8 @@
 
 using namespace std;
 
-Network::Network(int *l){
-    for (int i = 0; i < sizeof(l)/sizeof(l[0])+1; i++){
+Network::Network(int l[], int c){
+    for (int i = 0; i < c; i++){
         Layer L(l[i]);
         layers.push_back(L);
     }
