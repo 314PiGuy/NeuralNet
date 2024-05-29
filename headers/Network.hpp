@@ -1,4 +1,5 @@
 #include <iostream>
+#include <random>
 #include "Layer.hpp"
 
 using namespace std;
@@ -12,4 +13,6 @@ class Network{
     void calculate();
     void input(vector<double> v);
     double totalError(vector<double> v);
+    void output(vector<double> v);
+    void randomize();
 };

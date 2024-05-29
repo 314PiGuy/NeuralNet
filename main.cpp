@@ -10,14 +10,14 @@ using namespace std;
 
 Network train(Network net, vector<double> in, vector<double> out){
     for (int n = 0; n < net.layers.size(); n++){
-        vector<vector<double>> changes;
-        vector<double> v;
-        for (int a = 0; a < net.layers[n].weights[0].size(); a++){
-            v.push_back(0);
-        }
-        for (int a = 0; a < net.layers[n].weights.size(); a++){
-            changes.push_back(v);
-        }
+        // vector<vector<double>> changes;
+        // vector<double> v;
+        // for (int a = 0; a < net.layers[n].weights[0].size(); a++){
+        //     v.push_back(0);
+        // }
+        // for (int a = 0; a < net.layers[n].weights.size(); a++){
+        //     changes.push_back(v);
+        // }
         for (int r = 0; r < net.layers[n].weights.size(); r++){
             for (int c = 0; c < net.layers[n].weights[0].size(); c++){
                 net.layers[n].weights[r][c] += 0.1;
@@ -29,12 +29,14 @@ Network train(Network net, vector<double> in, vector<double> out){
                 net.calculate();
                 double error2 = net.totalError(out);
                 double slope = (error-error2)*10;
-                changes[r][c] = slope/15;
+                net.layers[n].weightChanges[r][c] = slope;
             }
         }
+    }
+    for (int n = 0; n < net.layers.size(); n++){
         for (int r = 0; r < net.layers[n].weights.size(); r++){
             for (int c = 0; c < net.layers[n].weights[0].size(); c++){
-                net.layers[n].weights[r][c] -= changes[r][c];
+                net.layers[n].weights[r][c] -= net.layers[n].weightChanges[r][c];
             }
         }
     }
@@ -45,42 +47,49 @@ Network train(Network net, vector<double> in, vector<double> out){
 
 
 int main(){
-    int l[] = {2, 10, 10, 2};
-    Network net = Network(l, 4);
+    int l[] = {2, 4, 4, 4, 1};
+    Network net = Network(l, 5);
     net.connect(2);
+    net.randomize();
 
-    net.input({6, 6});
-    net.calculate();
-    cout << net.totalError({1, 0})<< "\n\n";
+    for (Layer l: net.layers){
+        for (vector<double> r: l.weights){
+            for (double d: r){
+                cout << d << " ";
+            }
+        }
+    }
+    cout << "\n";
 
-    for (double i = 1; i <= 100; i++){
-        for (double j = 1; j <= 100; j++){
-            vector<double> v;
-            (fmod(i+j, 2)==0) ? v = {1.0, 0.0}: v={0.0, 1.0};
-            for (int n = 0; n < 25; n++){
-                net = train(net, {i, j}, v);
+    for (int n = 0; n < 25; n++){
+        for (int i = 0; i <= 1; i++){
+            for (int j = 0; j <= 1; j++){
+                train(net, {i/1.0, j/1.0}, {((int)(i!=j))/1.0});
             }
         }
     }
 
-    net.input({5, 5});
-    net.calculate();
-    cout << net.totalError({1, 0})<< "\n\n";
+    while (1){
+        int a;
+        int b;
+        cout << "First num ";
+        cin >> a;
+        cout << "\n";
+        cout << "Second num ";
+        cin >> b;
+        cout << "\n";
+        net.input({a/1.0, b/1.0});
+        cout << net.layers[net.layers.size()-1].neurons.size() << "\n";
+        for (int l = 0; l < net.layers.size(); l++){
+            for (int n = 0; n < net.layers[l].neurons.size(); n++){
+                cout << net.layers[l].neurons[n].value << "\n";
+            }
+        }
+        cout << "\n";
+        net.calculate();
+        net.output({((int)(a!=b))/1.0});
+        cout << "\n";
+    }
 
-    net.input({7, 92});
-    net.calculate();
-    cout << net.totalError({1, 0})<< "\n\n";
-
-    net.input({18, 6});
-    net.calculate();
-    cout << net.totalError({1, 0})<< "\n\n";
-
-    net.input({12, 14});
-    net.calculate();
-    cout << net.totalError({1, 0})<< "\n\n";
-
-    net.input({51, 56});
-    net.calculate();
-    cout << net.totalError({1, 0})<< "\n\n";
     return 0;
 }

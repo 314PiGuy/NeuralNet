@@ -26,7 +26,7 @@ void Network::calculate(){
         }
         vector<double> neuronvalues = matrixMult(layers[i].weights, prevneurons);
         for (int n = 0; n < neuronvalues.size(); n++){
-            layers[i].neurons[n].value = sigmoid(neuronvalues[n] + layers[i].biases[n]);
+            layers[i].neurons[n].value = sigmoid(neuronvalues[n] /*+ layers[i].biases[n]*/);
         }
     }
 }
@@ -43,5 +43,24 @@ double Network::totalError(vector<double> v){
         e += layers[layers.size()-1].neurons[i].error(v[i]);
     }
 
-    return e;
+    return e/layers[layers.size()-1].neurons.size();
+}
+
+void Network::output(vector<double> v){
+    for (Neuron n: layers[layers.size()-1].neurons){
+        cout << n.value << "\n";
+    }
+    cout << "\n";
+    cout << totalError(v) << "\n";
+}
+
+void Network::randomize(){
+    random_device rd;
+    for (int l = 0; l < layers.size(); l++){
+        for (int r = 0; r < layers[l].weights.size(); r++){
+            for (int c = 0; c < layers[l].weights[0].size(); c++){
+                layers[l].weights[r][c] = rd();
+            }
+        }
+    }
 }

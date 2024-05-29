@@ -9,6 +9,7 @@ class Layer{
     public:
     int numneurons;
     vector<vector<double>> weights;
+    vector<vector<double>> weightChanges;
     vector<Neuron> neurons;
     vector<double> biases;
     void connect(int previous);

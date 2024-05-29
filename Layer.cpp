@@ -6,10 +6,11 @@ void Layer::connect(int n){
     int columns = n;
     vector<double> v;
     for (int c = 0; c < columns; c++){
-        v.push_back(2);
+        v.push_back(0);
     }
     for (int r = 0; r < rows; r++){
         weights.push_back(v);
+        weightChanges.push_back(v);
         Neuron ne;
         //also add neurons and biases
         neurons.push_back(ne);
