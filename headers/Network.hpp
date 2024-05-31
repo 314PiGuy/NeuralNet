@@ -9,6 +9,7 @@ class Network{
     public:
     vector<Layer> layers;
     Network(int l[], int c);
+    // Network(int *l);
     void connect(int inputNeurons);
     void calculate();
     void input(vector<double> v);

@@ -15,6 +15,7 @@ void Layer::connect(int n){
         //also add neurons and biases
         neurons.push_back(ne);
         biases.push_back(0);
+        biasChanges.push_back(0);
     }
     // cout << neurons.size() << "\n";
 }

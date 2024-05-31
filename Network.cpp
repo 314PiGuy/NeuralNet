@@ -11,6 +11,13 @@ Network::Network(int l[], int c){
 
 }
 
+// Network::Network(int *l){
+//     for (int i = 0; i < sizeof(l)/sizeof(l[0])+1; i++){
+//         Layer L(l[i]);
+//         layers.push_back(L);
+//     }
+// }
+
 void Network::connect(int n){
     for (int i = 0; i < layers.size(); i++){
         if (i == 0) layers[i].connect(n);
@@ -26,7 +33,7 @@ void Network::calculate(){
         }
         vector<double> neuronvalues = matrixMult(layers[i].weights, prevneurons);
         for (int n = 0; n < neuronvalues.size(); n++){
-            layers[i].neurons[n].value = sigmoid(neuronvalues[n] /*+ layers[i].biases[n]*/);
+            layers[i].neurons[n].value = sigmoid(neuronvalues[n] + layers[i].biases[n]);
         }
     }
 }
@@ -56,11 +63,15 @@ void Network::output(vector<double> v){
 
 void Network::randomize(){
     random_device rd;
+    std::mt19937 engine(rd());
     for (int l = 0; l < layers.size(); l++){
         for (int r = 0; r < layers[l].weights.size(); r++){
             for (int c = 0; c < layers[l].weights[0].size(); c++){
                 layers[l].weights[r][c] = rd();
             }
+        }
+        for (int r = 0; r < layers[l].biasChanges.size(); r++){
+            layers[l].biasChanges[r] = rd();
         }
     }
 }

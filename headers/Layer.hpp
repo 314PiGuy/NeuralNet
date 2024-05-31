@@ -12,6 +12,7 @@ class Layer{
     vector<vector<double>> weightChanges;
     vector<Neuron> neurons;
     vector<double> biases;
+    vector<double> biasChanges;
     void connect(int previous);
     Layer(int n);
 };
