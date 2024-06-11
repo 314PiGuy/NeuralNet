@@ -16,4 +16,6 @@ class Network{
     double totalError(vector<double> v);
     void output(vector<double> v);
     void randomize();
+    void propogate(int l, int r, int c);
+    double propogationCalculation(vector<double> in, vector<double> out);
 };

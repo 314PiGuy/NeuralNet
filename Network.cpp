@@ -10,13 +10,7 @@ Network::Network(int l[], int c){
     }
 
 }
-
-// Network::Network(int *l){
-//     for (int i = 0; i < sizeof(l)/sizeof(l[0])+1; i++){
-//         Layer L(l[i]);
-//         layers.push_back(L);
-//     }
-// }
+ 
 
 void Network::connect(int n){
     for (int i = 0; i < layers.size(); i++){
@@ -70,8 +64,57 @@ void Network::randomize(){
                 layers[l].weights[r][c] = rd();
             }
         }
-        for (int r = 0; r < layers[l].biasChanges.size(); r++){
-            layers[l].biasChanges[r] = rd();
+        for (int r = 0; r < layers[l].biases.size(); r++){
+            layers[l].biases[r] = rd();
         }
     }
+}
+
+void Network::propogate(int l, int r, int c){
+    for (int L = 0; L < layers.size(); L++){
+        layers[L].propWeights = layers[L].weights;
+    }
+    for (int n = 0; n < layers[l].propWeights.size(); n++){
+        for (int n2 = 0; n2 < layers[l].propWeights[0].size(); n2++){
+            layers[l].propWeights[n][n2] = 0;
+        }
+    }
+    layers[l].propWeights[r][c] = 1;
+
+    for (int i = 0; i < layers.size(); i++){
+        layers[i].propNeurons = layers[i].neurons;
+    }
+}
+
+double Network::propogationCalculation(vector<double> in, vector<double> out){
+    for (int n = 0; n <in.size(); n++){
+        layers[0].neurons[n].value = in[n];
+    }
+    for (int i = 1; i < layers.size(); i++){
+        vector<double> prevneurons;
+        for (Neuron n: layers[i-1].propNeurons){
+            prevneurons.push_back(n.value);
+        }
+        vector<double> neuronvalues = matrixMult(layers[i].propWeights, prevneurons);
+        for (int n = 0; n < neuronvalues.size(); n++){
+            layers[i].propNeurons[n].value = neuronvalues[n];
+        }
+    }
+
+    double totalDerivative = 0;
+
+    vector<Neuron> outNeurons = layers[layers.size()-1].neurons;
+    vector<Neuron> outPropNeurons = layers[layers.size()-1].propNeurons;
+
+    // for (Neuron n: outPropNeurons){
+    //     cout << n.value << "\n";
+    // }
+
+    cout << "Final top neuron:" << outPropNeurons[0].value << "\n";
+
+    for (int i = 0; i < out.size(); i++){
+        totalDerivative += 2*(outNeurons[i].value-out[i])*outPropNeurons[i].value;
+    }
+
+    return totalDerivative;
 }
