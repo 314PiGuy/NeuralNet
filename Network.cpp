@@ -97,7 +97,7 @@ double Network::propogationCalculation(vector<double> in, vector<double> out){
         }
         vector<double> neuronvalues = matrixMult(layers[i].propWeights, prevneurons);
         for (int n = 0; n < neuronvalues.size(); n++){
-            layers[i].propNeurons[n].value = neuronvalues[n];
+            // layers[i].propNeurons[n].value = neuronvalues[n]*sigmoidDerivative( );
         }
     }
 
@@ -117,4 +117,36 @@ double Network::propogationCalculation(vector<double> in, vector<double> out){
     }
 
     return totalDerivative;
+}
+
+void Network::calculateNoBound(){
+    for (int i = 1; i < layers.size(); i++){
+        vector<double> prevneurons;
+        for (Neuron n: layers[i-1].neurons){
+            prevneurons.push_back(n.value);
+        }
+        vector<double> neuronvalues = matrixMult(layers[i].weights, prevneurons);
+        for (int n = 0; n < neuronvalues.size(); n++){
+            layers[i].neurons[n].value = neuronvalues[n];
+        }
+    }
+}
+
+void Network::backPropogate(vector<double> out){
+    for (int L = 0; L < layers.size(); L++){
+        layers[L].propWeights = layers[L].weights;
+    }
+    calculate();
+    for (int n = 0; n < layers[layers.size()-1].neurons.size(); n++){
+        layers[layers.size()-1].neurons[n].value = 1;
+    }
+    for (int l = layers.size()-1; l > 0; l--){
+        for (int r = 0; r < layers[l].weights.size(); r++){
+            for (int c = 0; c < layers[l].weights[0].size(); c++){
+                layers[l].propWeights[r][c] = layers[l-1].neurons[c].value * sigmoidDerivative(layers[l-1].neurons[c].value * layers[l].propWeights[r][c] + layers[l].biases[r]) * layers[l].neurons[r].value;
+                // layers[l-1].neurons[c].value *= layers[l].propWeights[r][c];
+                layers[l-1].neurons[c].value += layers[l].weights[r][c] * sigmoidDerivative(layers[l-1].neurons[c].value * layers[l].propWeights[r][c] + layers[l].biases[r]);
+            }
+        }
+    }
 }
