@@ -123,50 +123,50 @@ int main(){
 
     RenderWindow window(VideoMode(800, 800), "N00000000");
 
-    int l[] = {1, 1, 1};
+    int l[] = {2, 3, 3, 2};
     Network net = Network(l, 3);
     net.connect(1);
 
-    for (int n = 0; n < 20; n++){
-        for (int i = 0; i <= 1; i++){
-            for (int j = 0; j <= 1; j++){
-                net = train1(net, {i/1.0, j/1.0}, {((int)(i!=j))/1.0, 1-((int)(i!=j))/1.0});
-            }
-        }
-    }
+    // for (int n = 0; n < 20; n++){
+    //     for (int i = 0; i <= 1; i++){
+    //         for (int j = 0; j <= 1; j++){
+    //             net = train1(net, {i/1.0, j/1.0}, {((int)(i!=j))/1.0, 1-((int)(i!=j))/1.0});
+    //         }
+    //     }
+    // }
 
-    for (Layer layer: net.layers){
-        for (auto n: layer.neurons){
-            cout << n.value << "\n";
-        }
-    }
-    cout << "\n";
+    // for (Layer layer: net.layers){
+    //     for (auto n: layer.neurons){
+    //         cout << n.value << "\n";
+    //     }
+    // }
+    // cout << "\n";
 
-    for (Layer layer: net.layers){
-        for (auto r: layer.weights){
-            for (auto c: r){
-                cout << c << "\n";
-            }
-        }
-    }
-    cout << "\n";
+    // for (Layer layer: net.layers){
+    //     for (auto r: layer.weights){
+    //         for (auto c: r){
+    //             cout << c << "\n";
+    //         }
+    //     }
+    // }
+    // cout << "\n";
 
   
-    net.layers[2].weights[0][0] += 0.1;
-    net.input({1});
-    net.calculate();
-    double error = net.layers[net.layers.size()-1].neurons[0].value;
-    net.layers[2].weights[0][0] -= 0.1;
-    net.input({1});
-    net.calculate();
-    double error2 = net.layers[net.layers.size()-1].neurons[0].value;
-    double slope = (error-error2)*10;
-    cout << slope << "\n";
+    // net.layers[2].weights[0][0] += 0.1;
+    // net.input({1});
+    // net.calculate();
+    // double error = net.layers[net.layers.size()-1].neurons[0].value;
+    // net.layers[2].weights[0][0] -= 0.1;
+    // net.input({1});
+    // net.calculate();
+    // double error2 = net.layers[net.layers.size()-1].neurons[0].value;
+    // double slope = (error-error2)*10;
+    // cout << slope << "\n";
 
-    net.propogate(2, 0, 0);
-    net.propogationCalculation({1}, {1});
+    // net.propogate(2, 0, 0);
+    // net.propogationCalculation({1}, {1});
 
-    return 0;
+    // // return 0;
 
     Image im;
     im.loadFromFile("blank.jpg");
@@ -197,7 +197,7 @@ int main(){
 
         for (int i = 0; i <= 1; i++){
             for (int j = 0; j <= 1; j++){
-                net = train2(net, {i/1.0, j/1.0}, {((int)(i!=j))/1.0, 1-((int)(i!=j))/1.0});
+                net = train1(net, {i/1.0, j/1.0}, {((int)(i!=j))/1.0, 1-((int)(i!=j))/1.0});
             }
         }
         for (int i = 0; i < 800; i++){
