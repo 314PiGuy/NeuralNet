@@ -10,51 +10,8 @@
 using namespace std;
 using namespace sf;
 
-Network train(Network net, vector<double> in, vector<double> out){
-    for (int n = 0; n < net.layers.size(); n++){
-        for (int r = 0; r < net.layers[n].weights.size(); r++){
-            for (int c = 0; c < net.layers[n].weights[0].size(); c++){
-                net.layers[n].weights[r][c] += 0.1;
-                net.input(in);
-                net.calculate();
-                double error = net.totalError(out);
-                net.layers[n].weights[r][c] -= 0.1;
-                net.input(in);
-                net.calculate();
-                double error2 = net.totalError(out);
-                double slope = (error-error2)*10;
-                net.layers[n].weightChanges[r][c] = slope*25;
-            }
-        }
-        for (int r = 0; r < net.layers[n].biases.size(); r++){
-            net.layers[n].biases[r] += 0.1;
-            net.input(in);
-            net.calculate();
-            double error = net.totalError(out);
-            net.layers[n].biases[r] -= 0.1;
-            net.input(in);
-            net.calculate();
-            double error2 = net.totalError(out);
-            double slope = (error-error2)*10;
-            net.layers[n].biasChanges[r] = slope*25;
-        }
-    }
-    for (int n = 0; n < net.layers.size(); n++){
-        for (int r = 0; r < net.layers[n].weights.size(); r++){
-            for (int c = 0; c < net.layers[n].weights[0].size(); c++){
-                // cout << net.layers[n].weightChanges[r][c] << "\n";
-                net.layers[n].weights[r][c] -= net.layers[n].weightChanges[r][c];
-            }
-        }
-    }
-    for (int n = 0; n < net.layers.size(); n++){
-        for (int r = 0; r < net.layers[n].biases.size(); r++){
-            net.layers[n].biases[r] -= net.layers[n].biasChanges[r];
-        }
-    }
 
-    return net;
-}
+
 
 Network train1(Network net, vector<double> in, vector<double> out){
     for (int n = 0; n < net.layers.size(); n++){
@@ -123,7 +80,7 @@ int main(){
 
     RenderWindow window(VideoMode(800, 800), "N00000000");
 
-    int l[] = {2, 2, 1};
+    int l[] = {2, 2, 2};
     Network net = Network(l, 3);
     net.connect(1);
 
@@ -153,24 +110,23 @@ int main(){
 
   
     net.layers[1].weights[0][0] += 0.1;
-    net.input({1});
+    net.input({1, 1});
     net.calculate();
-    double error = net.layers[net.layers.size()-1].neurons[0].value;
+    // double error = net.layers[net.layers.size()-1].neurons[0].value;
+    double error = net.totalError({1, 1});
     net.layers[1].weights[0][0] -= 0.1;
-    net.input({1});
+    net.input({1, 1});
     net.calculate();
     double error2 = net.layers[net.layers.size()-1].neurons[0].value;
     double slope = (error-error2)*10;
     cout << slope << "\n";
 
-    // net.propogate(1, 0, 0);
-    // cout << net.propogationCalculation({1}, {1}) << "\n";
-    net.backPropogate({1});
-    cout << net.layers[1].propWeights[0][0] << "\n";
+    net.propogate(1, 0, 0);
+    cout << net.propogationCalculation({1, 1}, {1, 1}) << "\n";
+    // net.backPropogate({1});
+    // cout << net.layers[1].propWeights[0][0] << "\n";
+    // double d1 = net.layers[0].neurons[0].value * sigmoidDerivative(net.layers);
 
-    // cout << net.layers[0].neurons[0].value * sigmoidDerivative(net.layers[1].neurons[0].value) << "\n";
-
-    // cout << sigmoidDerivative(net.layers[1].neurons[0].value) << "\n";
 
     return 0;
 
