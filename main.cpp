@@ -92,40 +92,43 @@ int main(){
         }
     }
 
-    for (Layer layer: net.layers){
-        for (auto n: layer.neurons){
-            cout << n.value << "\n";
-        }
-    }
-    cout << "\n";
+    // for (Layer layer: net.layers){
+    //     for (auto n: layer.neurons){
+    //         cout << n.value << "\n";
+    //     }
+    // }
+    // cout << "\n";
 
-    for (Layer layer: net.layers){
-        for (auto r: layer.weights){
-            for (auto c: r){
-                cout << c << "\n";
-            }
-        }
-    }
-    cout << "\n";
+    // for (Layer layer: net.layers){
+    //     for (auto r: layer.weights){
+    //         for (auto c: r){
+    //             cout << c << "\n";
+    //         }
+    //     }
+    // }
+    // cout << "\n";
 
   
-    net.layers[1].weights[0][0] += 0.1;
-    net.input({1, 1});
+    net.layers[2].weights[0][0] += 0.1;
+    net.input({1});
     net.calculate();
     // double error = net.layers[net.layers.size()-1].neurons[0].value;
     double error = net.totalError({1, 1});
-    net.layers[1].weights[0][0] -= 0.1;
-    net.input({1, 1});
+    net.layers[2].weights[0][0] -= 0.1;
+    net.input({1});
     net.calculate();
-    double error2 = net.layers[net.layers.size()-1].neurons[0].value;
+    // double error2 = net.layers[net.layers.size()-1].neurons[0].value;
+    double error2 = net.totalError({1, 1});
     double slope = (error-error2)*10;
     cout << slope << "\n";
 
-    net.propogate(1, 0, 0);
-    cout << net.propogationCalculation({1, 1}, {1, 1}) << "\n";
-    // net.backPropogate({1});
-    // cout << net.layers[1].propWeights[0][0] << "\n";
-    // double d1 = net.layers[0].neurons[0].value * sigmoidDerivative(net.layers);
+
+    net.backPropagate2({1});
+    cout << net.layers[2].propWeights[0][0] << "\n";
+
+    cout << net.layers[net.layers.size()-2].neurons[0].value * 2*((net.layers.back().neurons[0].value-1)) * sigmoidDerivative(unSigmoid(net.layers.back().neurons[0].value));
+
+
 
 
     return 0;

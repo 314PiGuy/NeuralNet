@@ -19,5 +19,6 @@ class Network{
     void randomize();
     void propogate(int l, int r, int c);
     double propogationCalculation(vector<double> in, vector<double> out);
-    void backPropogate(vector<double> out);
+    void backPropagate(vector<double> out);
+    void backPropagate2(vector<double> out);
 };

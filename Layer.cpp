@@ -34,3 +34,17 @@ void Layer::multNeurons(vector<vector<double>> n){
         neurons[i].value = v2[i];
     }
 }
+
+vector<double> Layer::returnValues(){
+    vector<double> v;
+    for (Neuron n: neurons){
+        v.push_back(n.value);
+    }
+    return v;
+}
+
+void Layer::setNeurons(vector<double> v){
+    for (int i = 0; i < v.size(); i++){
+        neurons[i].value = v[i];
+    }
+}

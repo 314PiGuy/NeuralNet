@@ -27,6 +27,10 @@ double sigmoid(double d){
     return 1/(1+pow(2.718, -d));
 }
 
+double unSigmoid(double d){
+    return -1*log(1/d-1);
+}
+
 double sigmoidDerivative(double d){
     double top = pow(2.718, -d);
     double bottom = (1+pow(2.718, -d))*(1+pow(2.718, -d));
@@ -47,4 +51,30 @@ vector<vector<double>> matFlip(vector<vector<double>> a){
         }
     }
     return a2;
+}
+
+vector<vector<double>> bigDot(vector<double> a, vector<double> b){
+    vector<vector<double>> v;
+    for (int r = 0; r < b.size(); r++){
+        vector<double> v1;
+        for (int c = 0; c < a.size(); c++){
+            v1.push_back(0);
+        }
+        v.push_back(v1);
+    }
+
+    for (int r = 0; r < v.size(); r++){
+        for (int c = 0; c < v[0].size(); c++){
+            v[r][c] = b[r]*a[c];
+        }
+    }
+    return v;
+}
+
+vector<double> dot(vector<double> a, vector<double> b){
+    vector<double> v(a.size());
+    for (int i = 0; i < a.size(); i++){
+        v[i] = a[i]*b[i];
+    }
+    return v;
 }
