@@ -21,4 +21,5 @@ class Network{
     double propogationCalculation(vector<double> in, vector<double> out);
     void backPropagate(vector<double> out);
     void backPropagate2(vector<double> out);
+    void backPropagate3(vector<double> out);
 };

@@ -80,7 +80,7 @@ int main(){
 
     RenderWindow window(VideoMode(800, 800), "N00000000");
 
-    int l[] = {2, 2, 2};
+    int l[] = {3, 3, 3};
     Network net = Network(l, 3);
     net.connect(1);
 
@@ -108,25 +108,25 @@ int main(){
     // }
     // cout << "\n";
 
+    int L = 1;
+
   
-    net.layers[2].weights[0][0] += 0.1;
-    net.input({1});
+    net.layers[L].weights[1][0] += 0.1;
+    net.input({1, 0, 1});
     net.calculate();
     // double error = net.layers[net.layers.size()-1].neurons[0].value;
-    double error = net.totalError({1, 1});
-    net.layers[2].weights[0][0] -= 0.1;
-    net.input({1});
+    double error = net.totalError({1, 1, 0});
+    net.layers[L].weights[1][0] -= 0.1;
+    net.input({1, 0, 1});
     net.calculate();
     // double error2 = net.layers[net.layers.size()-1].neurons[0].value;
-    double error2 = net.totalError({1, 1});
+    double error2 = net.totalError({1, 1, 0});
     double slope = (error-error2)*10;
     cout << slope << "\n";
 
-
-    net.backPropagate2({1});
-    cout << net.layers[2].propWeights[0][0] << "\n";
-
-    cout << net.layers[net.layers.size()-2].neurons[0].value * 2*((net.layers.back().neurons[0].value-1)) * sigmoidDerivative(unSigmoid(net.layers.back().neurons[0].value));
+    net.input({1, 0, 1});
+    net.backPropagate2({1, 1, 0});
+    cout << net.layers[L].propWeights[1][0] << "\n";
 
 
 

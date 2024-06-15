@@ -163,6 +163,7 @@ void Network::backPropagate(vector<double> out){
     }
 }
 
+
 void Network::backPropagate2(vector<double> out){
     calculate();
 
@@ -174,7 +175,7 @@ void Network::backPropagate2(vector<double> out){
     vector<double> errors(layers.back().neurons.size());
 
     for (int i = 0; i < errors.size(); i++){
-        errors[i] = 2*(layers.back().neurons[i].value-out[i]);
+        errors[i] = 2*(layers.back().neurons[i].value-out[i])/layers.back().returnValues().size();
     }
 
     vector<double> sigmoids(layers.back().neurons.size());
@@ -200,4 +201,55 @@ void Network::backPropagate2(vector<double> out){
         }
         errors = errors2;
     }
+}
+
+void Network::backPropagate3(vector<double> out){
+    calculate();
+
+    for (int L = 0; L < layers.size(); L++){
+        layers[L].propWeights = layers[L].weights;
+    }
+    
+
+    vector<double> errors(layers.back().neurons.size());
+
+    for (int i = 0; i < errors.size(); i++){
+        errors[i] = 2*(layers.back().neurons[i].value-out[i])/layers.back().returnValues().size();
+    }
+
+    vector<double> sigmoids(layers.back().neurons.size());
+    for (int i = 0; i < sigmoids.size(); i++){
+        errors[i] *= sigmoidDerivative(unSigmoid(layers.back().neurons[i].value));
+    }
+
+    for (int r = 0; r < layers[2].weights.size(); r++){
+        for (int c = 0; c < layers[2].weights[0].size(); c++){
+            layers[2].propWeights[r][c] = layers[1].neurons[c].value * errors[r];
+        }
+    }
+
+    // vector<double> errors2(layers[1].neurons.size(), 0);
+
+    // for (int r = 0; r < layers[2].weights.size(); r++){
+    //     for (int c = 0; c < layers[2].weights[0].size(); c++){
+    //         errors2[c] += layers[2].weights[r][c] * errors[r]; 
+    //     }
+    // }
+
+    // for (int i = 0; i < errors2.size(); i++){
+    //     errors2[i] *= sigmoidDerivative(unSigmoid(layers[1].returnValues()[i]));
+    // }
+
+    // for (int r = 0; r < layers[1].weights.size(); r++){
+    //     for (int c = 0; c < layers[1].weights[0].size(); c++){
+    //         layers[1].propWeights[r][c] = layers[0].neurons[c].value * errors2[r];
+    //     }
+    // }
+
+    double d = errors[0]*layers[2].weights[0][0]+errors[1]*layers[2].weights[1][0];
+    cout << layers[0].neurons[0].value*d*sigmoidDerivative(unSigmoid(layers[1].returnValues()[0])) << "\n";
+
+
+
+    
 }
