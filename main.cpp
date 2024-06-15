@@ -80,17 +80,18 @@ int main(){
 
     RenderWindow window(VideoMode(800, 800), "N00000000");
 
-    int l[] = {3, 3, 3};
+    int l[] = {3, 2, 4, 5};
     Network net = Network(l, 3);
-    net.connect(1);
+    net.connect(3);
 
-    for (int n = 0; n < 20; n++){
-        for (int i = 0; i <= 1; i++){
-            for (int j = 0; j <= 1; j++){
-                net = train1(net, {i/1.0, j/1.0}, {((int)(i!=j))/1.0, 1-((int)(i!=j))/1.0});
-            }
-        }
-    }
+
+    // for (int n = 0; n < 20; n++){
+    //     for (int i = 0; i <= 1; i++){
+    //         for (int j = 0; j <= 1; j++){
+    //             net = train1(net, {i/1.0, j/1.0}, {((int)(i!=j))/1.0, 1-((int)(i!=j))/1.0});
+    //         }
+    //     }
+    // }
 
     // for (Layer layer: net.layers){
     //     for (auto n: layer.neurons){
@@ -108,25 +109,25 @@ int main(){
     // }
     // cout << "\n";
 
-    int L = 1;
+    // int L = 1;
 
   
-    net.layers[L].weights[1][0] += 0.1;
+    // net.layers[L].weights[2][1] += 0.1;
     net.input({1, 0, 1});
     net.calculate();
-    // double error = net.layers[net.layers.size()-1].neurons[0].value;
-    double error = net.totalError({1, 1, 0});
-    net.layers[L].weights[1][0] -= 0.1;
-    net.input({1, 0, 1});
-    net.calculate();
-    // double error2 = net.layers[net.layers.size()-1].neurons[0].value;
-    double error2 = net.totalError({1, 1, 0});
-    double slope = (error-error2)*10;
-    cout << slope << "\n";
+    // // double error = net.layers[net.layers.size()-1].neurons[0].value;
+    // double error = net.totalError({1, 1, 0, 0, 1});
+    // net.layers[L].weights[2][1] -= 0.1;
+    // net.input({1, 0, 1});
+    // net.calculate();
+    // // double error2 = net.layers[net.layers.size()-1].neurons[0].value;
+    // double error2 = net.totalError({1, 1, 0, 0, 1});
+    // double slope = (error-error2)*10;
+    // cout << slope << "\n";
 
-    net.input({1, 0, 1});
-    net.backPropagate2({1, 1, 0});
-    cout << net.layers[L].propWeights[1][0] << "\n";
+    // net.input({1, 0, 1});
+    // net.backPropagate2({1, 1, 0});
+    // cout << net.layers[L].propWeights[2][1] << "\n";
 
 
 

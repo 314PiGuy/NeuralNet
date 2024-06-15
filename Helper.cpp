@@ -27,15 +27,11 @@ double sigmoid(double d){
     return 1/(1+pow(2.718, -d));
 }
 
-double unSigmoid(double d){
-    return -1*log(1/d-1);
+
+double sigmoidThing(double d){
+    return d*(1-d);
 }
 
-double sigmoidDerivative(double d){
-    double top = pow(2.718, -d);
-    double bottom = (1+pow(2.718, -d))*(1+pow(2.718, -d));
-    return top/bottom;
-}
 vector<vector<double>> matFlip(vector<vector<double>> a){
     vector<double> v;
     vector<vector<double>> a2;
