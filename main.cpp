@@ -46,32 +46,6 @@ Network train1(Network net, vector<double> in, vector<double> out){
     return net;
 }
 
-Network train2(Network net, vector<double> in, vector<double> out){
-    for (int n = 0; n < net.layers.size(); n++){
-        net.input(in);
-        net.calculate();
-        for (int r = 0; r < net.layers[n].weights.size(); r++){
-            for (int c = 0; c < net.layers[n].weights[0].size(); c++){
-                net.propogate(n, r, c);
-                net.layers[n].weights[r][c] -= net.propogationCalculation(in, out)*20;
-            }
-        }
-        for (int r = 0; r < net.layers[n].biases.size(); r++){
-            net.layers[n].biases[r] += 0.1;
-            net.input(in);
-            net.calculate();
-            double error = net.totalError(out);
-            net.layers[n].biases[r] -= 0.1;
-            net.input(in);
-            net.calculate();
-            double error2 = net.totalError(out);
-            double slope = (error-error2)*10;
-            net.layers[n].biases[r] -= slope*20;
-        }
-    }
-
-    return net;
-}
 
 
 
@@ -109,25 +83,25 @@ int main(){
     // }
     // cout << "\n";
 
-    // int L = 1;
+    int L = 2;
 
   
-    // net.layers[L].weights[2][1] += 0.1;
+    net.layers[L].weights[2][1] += 0.1;
     net.input({1, 0, 1});
     net.calculate();
-    // // double error = net.layers[net.layers.size()-1].neurons[0].value;
-    // double error = net.totalError({1, 1, 0, 0, 1});
-    // net.layers[L].weights[2][1] -= 0.1;
-    // net.input({1, 0, 1});
-    // net.calculate();
-    // // double error2 = net.layers[net.layers.size()-1].neurons[0].value;
-    // double error2 = net.totalError({1, 1, 0, 0, 1});
-    // double slope = (error-error2)*10;
-    // cout << slope << "\n";
+    // double error = net.layers[net.layers.size()-1].neurons[0].value;
+    double error = net.totalError({1, 1, 0, 0, 1});
+    net.layers[L].weights[2][1] -= 0.1;
+    net.input({1, 0, 1});
+    net.calculate();
+    // double error2 = net.layers[net.layers.size()-1].neurons[0].value;
+    double error2 = net.totalError({1, 1, 0, 0, 1});
+    double slope = (error-error2)*10;
+    cout << slope << "\n";
 
-    // net.input({1, 0, 1});
-    // net.backPropagate2({1, 1, 0});
-    // cout << net.layers[L].propWeights[2][1] << "\n";
+    net.input({1, 0, 1});
+    net.backPropagate({1, 1, 0, 0, 1});
+    cout << net.layers[L].propWeights[2][1] << "\n";
 
 
 
