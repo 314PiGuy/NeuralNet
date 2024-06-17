@@ -3,11 +3,12 @@
 
 using namespace std;
 
-Network::Network(int l[], int c){
+Network::Network(int l[], int c, double learn){
     for (int i = 0; i < c; i++){
         Layer L(l[i]);
         layers.push_back(L);
     }
+    learnRate = learn;
 
 }
  
@@ -76,10 +77,6 @@ void Network::randomize(){
 
 void Network::backPropagate(vector<double> out){
     calculate();
-
-    for (int L = 0; L < layers.size(); L++){
-        layers[L].propWeights = layers[L].weights;
-    }
     
 
     vector<double> errors(layers.back().neurons.size());
@@ -99,6 +96,7 @@ void Network::backPropagate(vector<double> out){
         for (int r = 0; r < layers[l].weights.size(); r++){
             for (int c = 0; c < layers[l].weights[0].size(); c++){
                 layers[l].propWeights[r][c] = layers[l-1].neurons[c].value * errors[r];
+                layers[l].propBiases[r] = errors[r];
                 errors2[c] += layers[l].weights[r][c] * errors[r];
             }
         }
@@ -106,5 +104,15 @@ void Network::backPropagate(vector<double> out){
             errors2[i] *= sigmoidThing(layers[l-1].returnValues()[i]);
         }
         errors = errors2;
+    }
+
+    for (int l = layers.size()-1; l > 0; l--){
+        for (int r = 0; r < layers[l].weights.size(); r++){
+            for (int c = 0; c < layers[l].weights[0].size(); c++){
+                layers[l].weights[r][c] -= layers[l].propWeights[r][c] * learnRate;
+                // layers[l].biases[r] -= layers[l].propBiases[r] * learnRate;
+
+            }
+        }
     }
 }

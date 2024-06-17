@@ -16,8 +16,8 @@ void Layer::connect(int n){
         neurons.push_back(ne);
         biases.push_back(0);
     }
-    rawNeurons = neurons;
-    // cout << neurons.size() << "\n";
+    propWeights = weights;
+    propBiases = biases;
 }
 
 Layer::Layer(int n){

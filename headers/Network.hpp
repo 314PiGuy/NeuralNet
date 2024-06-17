@@ -7,8 +7,9 @@ using namespace std;
 class Network{
     private:
     public:
+    double learnRate;
     vector<Layer> layers;
-    Network(int l[], int c);
+    Network(int l[], int c, double f);
     // Network(int *l);
     void connect(int inputNeurons);
     void calculate();

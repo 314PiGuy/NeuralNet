@@ -46,6 +46,29 @@ Network train1(Network net, vector<double> in, vector<double> out){
     return net;
 }
 
+Network train(Network net, vector<double> in, vector<double> out){
+    net.input(in);
+    net.calculate();
+    net.backPropagate(out);
+    for (int n = 0; n < net.layers.size(); n++){
+        for (int r = 0; r < net.layers[n].biases.size(); r++){
+            net.layers[n].biases[r] += 0.1;
+            net.input(in);
+            net.calculate();
+            double error = net.totalError(out);
+            net.layers[n].biases[r] -= 0.1;
+            net.input(in);
+            net.calculate();
+            double error2 = net.totalError(out);
+            double slope = (error-error2)*10;
+            net.layers[n].biases[r] -= slope*20;
+        }
+    }
+    return net;
+}
+
+
+
 
 
 
@@ -54,54 +77,62 @@ int main(){
 
     RenderWindow window(VideoMode(800, 800), "N00000000");
 
-    int l[] = {3, 2, 4, 5};
-    Network net = Network(l, 3);
-    net.connect(3);
+    int l[] = {2, 3, 2};
+    Network net = Network(l, 3, 50);
+    net.connect(2);
 
-
-    // for (int n = 0; n < 20; n++){
-    //     for (int i = 0; i <= 1; i++){
-    //         for (int j = 0; j <= 1; j++){
-    //             net = train1(net, {i/1.0, j/1.0}, {((int)(i!=j))/1.0, 1-((int)(i!=j))/1.0});
-    //         }
-    //     }
-    // }
-
-    // for (Layer layer: net.layers){
-    //     for (auto n: layer.neurons){
-    //         cout << n.value << "\n";
-    //     }
-    // }
-    // cout << "\n";
-
-    // for (Layer layer: net.layers){
-    //     for (auto r: layer.weights){
-    //         for (auto c: r){
-    //             cout << c << "\n";
-    //         }
-    //     }
-    // }
-    // cout << "\n";
 
     int L = 2;
 
   
-    net.layers[L].weights[2][1] += 0.1;
-    net.input({1, 0, 1});
-    net.calculate();
-    // double error = net.layers[net.layers.size()-1].neurons[0].value;
-    double error = net.totalError({1, 1, 0, 0, 1});
-    net.layers[L].weights[2][1] -= 0.1;
-    net.input({1, 0, 1});
-    net.calculate();
-    // double error2 = net.layers[net.layers.size()-1].neurons[0].value;
-    double error2 = net.totalError({1, 1, 0, 0, 1});
-    double slope = (error-error2)*10;
-    cout << slope << "\n";
+    // net.layers[L].biases[1] += 0.1;
+    // net.input({1, 0});
+    // net.calculate();
+    // // double error = net.layers[net.layers.size()-1].neurons[0].value;
+    // double error = net.totalError({1, 0});
+    // net.layers[L].biases[1] -= 0.1;
+    // net.input({1, 0});
+    // net.calculate();
+    // // double error2 = net.layers[net.layers.size()-1].neurons[0].value;
+    // double error2 = net.totalError({1, 0});
+    // double slope = (error-error2)*10;
+    // cout << slope << "\n";
 
-    net.input({1, 0, 1});
-    net.backPropagate({1, 1, 0, 0, 1});
-    cout << net.layers[L].propWeights[2][1] << "\n";
+    // net.input({1, 0});
+    // net.backPropagate({1, 0});
+    // cout << net.layers[L].propBiases[1] << "\n";
+
+    for (int i = 0; i < 1000; i++){
+        for (int i = 0; i <= 1; i++){
+            for (int j = 0; j <= 1; j++){
+                net = train(net, {i/1.0f, j/1.0f}, {((int)(i!=j))/1.0f, 1-((int)(i!=j))/1.0f});
+            }
+        }
+    }
+
+    for (int i = 0; i < net.layers.size(); i++){
+        for (int j = 0; j < net.layers[i].weights.size(); j++){
+            net.layers[i].biases[j] += 0.1;
+            net.input({1, 0});
+            net.calculate();
+            double error = net.totalError({1, 0});
+            net.layers[i].biases[j] -= 0.1;
+            net.input({1, 0});
+            net.calculate();
+            double error2 = net.totalError({1, 0});
+            double slope = (error-error2)*10;
+            cout << slope << "\n";
+        }
+    }
+    cout << "\n";
+
+    net.backPropagate({1, 0});
+
+    for (int i = 0; i < net.layers.size(); i++){
+        for (int j = 0; j < net.layers[i].weights.size(); j++){
+            cout << net.layers[i].propBiases[j] << "\n";
+        }
+    }
 
 
 
@@ -137,12 +168,12 @@ int main(){
 
         for (int i = 0; i <= 1; i++){
             for (int j = 0; j <= 1; j++){
-                net = train1(net, {i/1.0, j/1.0}, {((int)(i!=j))/1.0, 1-((int)(i!=j))/1.0});
+                net = train(net, {i/1.0f, j/1.0f}, {((int)(i!=j))/1.0f, 1-((int)(i!=j))/1.0f});
             }
         }
         for (int i = 0; i < 800; i++){
             for (int j = 0; j < 800; j++){
-                net.input({i/800.0, j/800.0});
+                net.input({i/800.0f, j/800.0f});
                 net.calculate();
                 if (net.layers[net.layers.size()-1].neurons[0].value >= net.layers[net.layers.size()-1].neurons[1].value){
                     im.setPixel(i, 800-j, Color::Green);
