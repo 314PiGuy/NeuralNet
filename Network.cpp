@@ -75,6 +75,48 @@ void Network::randomize(){
 
 
 
+// void Network::backPropagate(vector<double> out){
+//     calculate();
+    
+
+//     vector<double> errors(layers.back().neurons.size());
+
+//     for (int i = 0; i < errors.size(); i++){
+//         errors[i] = 2*(layers.back().neurons[i].value-out[i])/layers.back().returnValues().size();
+//     }
+
+//     vector<double> sigmoids(layers.back().neurons.size());
+//     for (int i = 0; i < sigmoids.size(); i++){
+//         errors[i] *= sigmoidThing(layers.back().neurons[i].value);
+//     }
+
+
+//     for (int l = layers.size()-1; l > 0; l--){
+//         vector<double> errors2(layers[l-1].neurons.size(), 0);
+//         for (int r = 0; r < layers[l].weights.size(); r++){
+//             for (int c = 0; c < layers[l].weights[0].size(); c++){
+//                 layers[l].propWeights[r][c] = layers[l-1].neurons[c].value * errors[r];
+//                 layers[l].propBiases[r] = errors[r];
+//                 errors2[c] += layers[l].weights[r][c] * errors[r];
+//             }
+//         }
+//         for (int i = 0; i < layers[l-1].returnValues().size(); i++){
+//             errors2[i] *= sigmoidThing(layers[l-1].returnValues()[i]);
+//         }
+//         errors = errors2;
+//     }
+
+//     for (int l = layers.size()-1; l > 0; l--){
+//         for (int r = 0; r < layers[l].weights.size(); r++){
+//             for (int c = 0; c < layers[l].weights[0].size(); c++){
+//                 layers[l].weights[r][c] -= layers[l].propWeights[r][c] * learnRate;
+//                 // layers[l].biases[r] -= layers[l].propBiases[r] * learnRate;
+
+//             }
+//         }
+//     }
+// }
+
 void Network::backPropagate(vector<double> out){
     calculate();
     
@@ -95,8 +137,7 @@ void Network::backPropagate(vector<double> out){
         vector<double> errors2(layers[l-1].neurons.size(), 0);
         for (int r = 0; r < layers[l].weights.size(); r++){
             for (int c = 0; c < layers[l].weights[0].size(); c++){
-                layers[l].propWeights[r][c] = layers[l-1].neurons[c].value * errors[r];
-                layers[l].propBiases[r] = errors[r];
+                layers[l].propWeights[r][c] -= layers[l-1].neurons[c].value * errors[r] * learnRate;
                 errors2[c] += layers[l].weights[r][c] * errors[r];
             }
         }
@@ -106,13 +147,32 @@ void Network::backPropagate(vector<double> out){
         errors = errors2;
     }
 
+
+    vector<double> errors(layers.back().neurons.size());
+
+    for (int i = 0; i < errors.size(); i++){
+        errors[i] = 2*(layers.back().neurons[i].value-out[i])/layers.back().returnValues().size();
+    }
+
+    vector<double> sigmoids(layers.back().neurons.size());
+    for (int i = 0; i < sigmoids.size(); i++){
+        errors[i] *= sigmoidThing(layers.back().neurons[i].value);
+    }
+
+
     for (int l = layers.size()-1; l > 0; l--){
+        vector<double> errors2(layers[l-1].neurons.size(), 0);
         for (int r = 0; r < layers[l].weights.size(); r++){
             for (int c = 0; c < layers[l].weights[0].size(); c++){
-                layers[l].weights[r][c] -= layers[l].propWeights[r][c] * learnRate;
-                // layers[l].biases[r] -= layers[l].propBiases[r] * learnRate;
-
+                layers[l].propWeights[r][c] -= layers[l-1].neurons[c].value * errors[r] * learnRate;
+                errors2[c] += layers[l].weights[r][c] * errors[r];
             }
         }
+        for (int i = 0; i < layers[l-1].returnValues().size(); i++){
+            errors2[i] *= sigmoidThing(layers[l-1].returnValues()[i]);
+        }
+        errors = errors2;
     }
+
+    
 }

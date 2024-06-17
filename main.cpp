@@ -85,22 +85,6 @@ int main(){
     int L = 2;
 
   
-    // net.layers[L].biases[1] += 0.1;
-    // net.input({1, 0});
-    // net.calculate();
-    // // double error = net.layers[net.layers.size()-1].neurons[0].value;
-    // double error = net.totalError({1, 0});
-    // net.layers[L].biases[1] -= 0.1;
-    // net.input({1, 0});
-    // net.calculate();
-    // // double error2 = net.layers[net.layers.size()-1].neurons[0].value;
-    // double error2 = net.totalError({1, 0});
-    // double slope = (error-error2)*10;
-    // cout << slope << "\n";
-
-    // net.input({1, 0});
-    // net.backPropagate({1, 0});
-    // cout << net.layers[L].propBiases[1] << "\n";
 
     for (int i = 0; i < 1000; i++){
         for (int i = 0; i <= 1; i++){
