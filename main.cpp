@@ -47,21 +47,18 @@ Network train1(Network net, vector<double> in, vector<double> out){
 }
 
 Network train(Network net, vector<double> in, vector<double> out){
-    net.input(in);
-    net.calculate();
-    net.backPropagate(out);
     for (int n = 0; n < net.layers.size(); n++){
+        for (int r = 0; r < net.layers[n].weights.size(); r++){
+            for (int c = 0; c < net.layers[n].weights[0].size(); c++){
+                net.input(in);
+                net.backPropagate(out);
+                net.layers[n].weights[r][c] -= net.layers[n].propWeights[r][c]*20;
+            }
+        }
         for (int r = 0; r < net.layers[n].biases.size(); r++){
-            net.layers[n].biases[r] += 0.1;
             net.input(in);
-            net.calculate();
-            double error = net.totalError(out);
-            net.layers[n].biases[r] -= 0.1;
-            net.input(in);
-            net.calculate();
-            double error2 = net.totalError(out);
-            double slope = (error-error2)*10;
-            net.layers[n].biases[r] -= slope*20;
+            net.backPropagate(out);
+            net.layers[n].biases[r] -= net.layers[n].propBiases[r]*20;
         }
     }
     return net;
@@ -78,11 +75,14 @@ int main(){
     RenderWindow window(VideoMode(800, 800), "N00000000");
 
     int l[] = {2, 3, 2};
-    Network net = Network(l, 3, 50);
+    Network net = Network(l, 3, 20);
     net.connect(2);
 
+    int l2[] = {2, 3, 2};
+    Network net2 = Network(l2, 3, 20);
+    net2.connect(2);
 
-    int L = 2;
+
 
   
 
@@ -94,34 +94,35 @@ int main(){
         }
     }
 
+    for (int i = 0; i < 1000; i++){
+        for (int i = 0; i <= 1; i++){
+            for (int j = 0; j <= 1; j++){
+                net2 = train1(net2, {i/1.0f, j/1.0f}, {((int)(i!=j))/1.0f, 1-((int)(i!=j))/1.0f});
+            }
+        }
+    }
+
     for (int i = 0; i < net.layers.size(); i++){
         for (int j = 0; j < net.layers[i].weights.size(); j++){
-            net.layers[i].biases[j] += 0.1;
-            net.input({1, 0});
-            net.calculate();
-            double error = net.totalError({1, 0});
-            net.layers[i].biases[j] -= 0.1;
-            net.input({1, 0});
-            net.calculate();
-            double error2 = net.totalError({1, 0});
-            double slope = (error-error2)*10;
-            cout << slope << "\n";
+            for (int k = 0; k < net.layers[i].weights[0].size(); k++){
+                cout << net.layers[i].weights[j][k] << "\n";
+            }
         }
     }
     cout << "\n";
-
-    net.backPropagate({1, 0});
-
-    for (int i = 0; i < net.layers.size(); i++){
-        for (int j = 0; j < net.layers[i].weights.size(); j++){
-            cout << net.layers[i].propBiases[j] << "\n";
+    for (int i = 0; i < net2.layers.size(); i++){
+        for (int j = 0; j < net2.layers[i].weights.size(); j++){
+            for (int k = 0; k < net2.layers[i].weights[0].size(); k++){
+                cout << net2.layers[i].weights[j][k] << "\n";
+            }
         }
     }
+    
 
 
 
 
-    return 0;
+    // return 0;
 
     Image im;
     im.loadFromFile("blank.jpg");
