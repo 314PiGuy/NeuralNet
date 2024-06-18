@@ -73,8 +73,6 @@ void Network::randomize(){
 
 
 
-
-
 void Network::backPropagate(vector<double> out){
     calculate();
     
@@ -106,15 +104,15 @@ void Network::backPropagate(vector<double> out){
         errors = errors2;
     }
 
-    // for (int l = layers.size()-1; l > 0; l--){
-    //     for (int r = 0; r < layers[l].weights.size(); r++){
-    //         for (int c = 0; c < layers[l].weights[0].size(); c++){
-    //             layers[l].weights[r][c] -= layers[l].propWeights[r][c] * learnRate;
-    //             layers[l].biases[r] -= layers[l].propBiases[r] * learnRate;
+    for (int l = layers.size()-1; l > 0; l--){
+        for (int r = 0; r < layers[l].weights.size(); r++){
+            for (int c = 0; c < layers[l].weights[0].size(); c++){
+                layers[l].weights[r][c] -= layers[l].propWeights[r][c] * learnRate;
+                layers[l].biases[r] -= layers[l].propBiases[r] * learnRate;
 
-    //         }
-    //     }
-    // }
+            }
+        }
+    }
 }
 
 // void Network::backPropagate(vector<double> out){
@@ -137,7 +135,7 @@ void Network::backPropagate(vector<double> out){
 //         vector<double> errors2(layers[l-1].neurons.size(), 0);
 //         for (int r = 0; r < layers[l].weights.size(); r++){
 //             for (int c = 0; c < layers[l].weights[0].size(); c++){
-//                 layers[l].weights[r][c] = layers[l-1].neurons[c].value * errors[r] * learnRate;
+//                 layers[l].weights[r][c] -= layers[l-1].neurons[c].value * errors[r] * learnRate;
 //                 errors2[c] += layers[l].weights[r][c] * errors[r];
 //             }
 //         }
