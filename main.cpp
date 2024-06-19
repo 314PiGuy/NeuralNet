@@ -72,6 +72,7 @@ Network initialize(Network net){
         int inputs = net.layers[i].weights[0].size();
         int outputs = net.layers[i].weights.size();
         float dist = sqrt(2/inputs+outputs);
+        // float dist = 1;
         normal_distribution<> d(-1*dist, dist);
         for (int j = 0; j < net.layers[i].weights.size(); j++){
             for (int k = 0; k < net.layers[i].weights[j].size(); k++){
@@ -104,7 +105,7 @@ int main(){
 
   
 
-    for (int i = 0; i < 10000; i++){
+    for (int i = 0; i < 100000; i++){
         for (int i = 0; i <= 1; i++){
             for (int j = 0; j <= 1; j++){
                 net = train(net, {i/1.0f, j/1.0f}, {((int)(i!=j))/1.0f, 1-((int)(i!=j))/1.0f});
