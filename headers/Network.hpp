@@ -4,18 +4,18 @@
 
 using namespace std;
 
-class Network{
-    private:
-    public:
-    double learnRate;
+class Network
+{
+private:
     vector<Layer> layers;
-    Network(int l[], int c, double f);
-    // Network(int *l);
-    void connect(int inputNeurons);
+    void backPropagate(vector<double> out, vector<double> (*error)(vector<double>, vector<double>));
     void calculate();
-    void input(vector<double> v);
-    double totalError(vector<double> v);
-    void output(vector<double> v);
+    void connect(int inputNeurons);
+    double learnRate;
+
+public:
+    Network(vector<Layer>, double learnRate);
+    vector<double> predict(vector<double> in);
     void randomize();
-    void backPropagate(vector<double> out);
+    void train(vector<vector<double>> inputs, vector<vector<double>> outputs, vector<double> (*error)(vector<double>, vector<double>), int reps);
 };
