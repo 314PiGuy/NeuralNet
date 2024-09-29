@@ -1,21 +1,20 @@
+#pragma once
 #include <iostream>
 #include <random>
 #include "Layer.hpp"
 
 using namespace std;
 
-class Network
-{
-private:
-    vector<Layer> layers;
-    void backPropagate(vector<double> out, vector<double> (*error)(vector<double>, vector<double>));
-    void calculate();
-    void connect(int inputNeurons);
+class Network{
+    private:
+    public:
     double learnRate;
-
-public:
-    Network(vector<Layer>, double learnRate);
-    vector<double> predict(vector<double> in);
+    vector<Layer> layers;
+    Network(vector<Layer> l, double f);
+    void connect(int inputNeurons);
+    void calculate();
+    void input(vector<double> v);
     void randomize();
-    void train(vector<vector<double>> inputs, vector<vector<double>> outputs, vector<double> (*error)(vector<double>, vector<double>), int reps);
+    void backPropagate(vector<double> out);
+    void train(vector<vector<double>> in, vector<vector<double>> out, int e);
 };

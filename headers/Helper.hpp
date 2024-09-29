@@ -7,6 +7,10 @@ using namespace std;
 
 vector<double> matrixMult(vector<vector<double>> a, vector<double> b);
 
-double sigmoid(double d);
+double sigmoidA(double d);
 
-vector<double> MSE(vector<double>);
+double sigmoidB(double d);
+
+typedef double (*funcPtr) (double);
+    
+inline funcPtr sigmoid[] = {sigmoidA, sigmoidB};
