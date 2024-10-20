@@ -58,15 +58,11 @@ void Network::randomize(){
 
 
 
-void Network::backPropagate(vector<double> out){
+void Network::backPropagate(vector<double> out, vector<double> (*error)(vector<double> a, vector<double> b)){
+    
     calculate();
     
-
-    vector<double> errors(layers.back().neurons.size());
-
-    for (int i = 0; i < errors.size(); i++){
-        errors[i] = 2*(layers.back().neurons[i]-out[i])/layers.back().neurons.size();
-    }
+    vector<double> errors = error(layers.back().neurons, out);
 
     vector<double> sigmoids(layers.back().neurons.size());
     for (int i = 0; i < sigmoids.size(); i++){
@@ -93,20 +89,26 @@ void Network::backPropagate(vector<double> out){
         for (int r = 0; r < layers[l].weights.size(); r++){
             for (int c = 0; c < layers[l].weights[0].size(); c++){
                 layers[l].weights[r][c] -= layers[l].propWeights[r][c] * learnRate;
-                layers[l].biases[r] -= layers[l].propBiases[r] * learnRate;
+                if (layers[l].activation != reLU) layers[l].biases[r] -= layers[l].propBiases[r] * learnRate;
 
             }
         }
     }
 }
 
-void Network::train(vector<vector<double>> in, vector<vector<double>> out, int epochs){
+void Network::train(vector<vector<double>> in, vector<vector<double>> out, vector<double> (*error)(vector<double> a, vector<double> b), int epochs){
     int s = in.size();
     for (int i = 0; i < epochs; i++){
         for (int n = 0; n < s; n++){
             input(in[n]);
-            backPropagate(out[n]);
+            backPropagate(out[n], error);
         }
     }
+}
+
+vector<double> Network::predict(vector<double> in){
+    input(in);
+    calculate();
+    return layers.back().neurons;
 }
 

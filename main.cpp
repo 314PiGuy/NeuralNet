@@ -11,14 +11,20 @@
 using namespace std;
 using namespace sf;
 
+template <typename T> 
+ostream& operator<<(ostream& os, const vector<T>& v) 
+{ 
+    os << "["; 
+    for (int i = 0; i < v.size(); ++i) { 
+        os << v[i]; 
+        if (i != v.size() - 1) 
+            os << ", "; 
+    } 
+    os << "]"; 
+    return os; 
+} 
+  
 
-
-
-Network train(Network net, vector<double> in, vector<double> out){
-    net.input(in);
-    net.backPropagate(out);
-    return net;
-}
 
 Network initialize(Network net){
     random_device rd;
@@ -46,27 +52,36 @@ Network initialize(Network net){
 
 int main(){
 
-    RenderWindow window(VideoMode(800, 800), "N00000000");
-
-    Network net = Network({Layer(2, sigmoid), Layer(3, sigmoid), Layer(2, sigmoid), Layer(1, sigmoid)}, 0.1);
+    Network net = Network({Layer(2, reLU), Layer(5, reLU), Layer(5, reLU), Layer(1, sigmoid)}, 0.0001);
     net.connect(2);
 
     net.randomize();
 
-    vector<vector<double>> in = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
-    vector<vector<double>> out = {{0}, {1}, {1}, {0}};
+    // vector<vector<double>> in = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
+    // vector<vector<double>> out = {{0}, {1}, {1}, {0}};
 
-    net.train(in, out, 1000000);
-  
+    vector<vector<double>> in = {{0.2, 0.6}, {0.9, 0.3}, {0.7, 0.1}, {0.2, 0.8}};
+    vector<vector<double>> out = {{0.113}, {0.492}, {0.215}, {0.913}};
 
-    // for (int i = 0; i < 100000; i++){
-    //     for (int i = 0; i <= 1; i++){
-    //         for (int j = 0; j <= 1; j++){
-    //             net = train(net, {i/1.0f, j/1.0f}, {((int)(i!=j))/1.0f, 1-((int)(i!=j))/1.0f});
-    //         }
-    //     }
+    net.train(in, out, MSE, 4000000);
+
+    for (Layer l : net.layers){
+        cout << l.weights << "\n\n";
+    }
+
+    // for (Layer l: net.layers){
+    //     cout << l.neurons << "\n";
     // }
 
+    for (auto a: in){
+        auto r = net.predict(a);
+        cout << r[0] << "\n";
+    }
+  
+
+    return 0;
+
+    RenderWindow window(VideoMode(800, 800), "N00000000");
 
     Image im;
     im.loadFromFile("blank.jpg");
@@ -88,11 +103,11 @@ int main(){
 
         window.clear();
 
-        for (int i = 0; i <= 1; i++){
-            for (int j = 0; j <= 1; j++){
-                net = train(net, {i/1.0f, j/1.0f}, {((int)(i!=j))/1.0f, 1-((int)(i!=j))/1.0f});
-            }
-        }
+        // for (int i = 0; i <= 1; i++){
+        //     for (int j = 0; j <= 1; j++){
+        //         net = train(net, {i/1.0f, j/1.0f}, {((int)(i!=j))/1.0f, 1-((int)(i!=j))/1.0f});
+        //     }
+        // }
         // if (count = 999){
         //     net.input({1, 1});
         //     net.calculate();
