@@ -49,7 +49,7 @@ Network initialize(Network net)
 int main()
 {
 
-    Network net = Network({Layer(2, reLU), Layer(2, reLU), Layer(2, reLU)}, 0.1);
+    Network net = Network({Layer(2, reLU), Layer(4, reLU), Layer(2, reLU)}, 0.001);
     net.connect(2);
 
     net.randomize();
@@ -78,7 +78,7 @@ int main()
     //     cout << l.neurons << "\n";
     // }
 
-    net.train(in, out, MSE, 1000);
+    net.train(in, out, MSE, 300000);
 
     for (Layer l : net.layers)
     {
