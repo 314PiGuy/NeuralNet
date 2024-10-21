@@ -51,10 +51,10 @@ double reLUB(double d){
 vector<double> MSE(vector<double> a, vector<double> b)
 {
     vector<double> r;
-    int s = a.size();
+    double s = double(a.size());
     for (int i = 0; i < s; i++)
     {
-        r.push_back(1 * (a[i] - b[i]) / s);
+        r.push_back((2 * (a[i] - b[i])) / s);
     }
     return r;
 }
