@@ -62,7 +62,7 @@ void Network::randomize()
     {
         int inputs = layers[i].weights[0].size();
         int outputs = layers[i].weights.size();
-        float dist = sqrt(6.0/(inputs+outputs));
+        float dist = sqrt(6.0 / (inputs + outputs));
         // float dist = sqrt(2.0 / inputs);
         normal_distribution<> d(-dist, dist);
         for (int j = 0; j < layers[i].weights.size(); j++)
@@ -115,8 +115,8 @@ void Network::backPropagate(vector<double> out, vector<double> (*error)(vector<d
             {
                 double weightGrad = layers[l].propWeights[r][c] * learnRate;
                 double biasGrad = layers[l].propBiases[r] * learnRate;
-                layers[l].weights[r][c] -= (abs(weightGrad < 100)) ? weightGrad : 100 * sgn(weightGrad);
-                layers[l].biases[r] -= (abs(biasGrad < 100)) ? biasGrad : 100 * sgn(biasGrad);
+                layers[l].weights[r][c] -= (abs(weightGrad < 1)) ? weightGrad : 1 * sgn(weightGrad);
+                layers[l].biases[r] -= (abs(biasGrad < 1)) ? biasGrad : 1 * sgn(biasGrad);
             }
         }
     }
